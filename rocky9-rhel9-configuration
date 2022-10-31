@@ -1,0 +1,30 @@
+# Disable IPv6
+
+#check state
+sysctl --values net.ipv6.conf.default.disable_ipv6
+
+#configure to disable
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.d/70-ipv6.conf
+echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.d/70-ipv6.conf
+
+#load configuration to disable
+sysctl --load /etc/sysctl.d/70-ipv6.conf
+
+#check state
+sysctl --values net.ipv6.conf.default.disable_ipv6
+
+# reanming interfaces
+mkdir /etc/systemd/network/
+
+# create config file per network interface matching the mac address with a designated link name
+vi /etc/systemd/network/71-rename_int_WAN.link
+[Match]
+MACAddress=50:9a:4c:a0:c9:99
+[Link]
+Name=WAN
+
+# recreate network manager interface config file
+cp /etc/NetworkManager/system-connections/eno1.nmconnection /etc/NetworkManager/system-connections/eno1.nmconnection-bak
+mv /etc/NetworkManager/system-connections/eno1.nmconnection /etc/NetworkManager/system-connections/WAN.nmconnection
+sed -i 's/eno1/WAN/g' /etc/NetworkManager/system-connections/WAN.nmconnection
+init 6
