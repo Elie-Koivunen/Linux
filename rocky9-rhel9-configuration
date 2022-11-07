@@ -28,3 +28,7 @@ cp /etc/NetworkManager/system-connections/eno1.nmconnection /etc/NetworkManager/
 mv /etc/NetworkManager/system-connections/eno1.nmconnection /etc/NetworkManager/system-connections/WAN.nmconnection
 sed -i 's/eno1/WAN/g' /etc/NetworkManager/system-connections/WAN.nmconnection
 init 6
+
+
+# enable legacy sha1 support
+update-crypto-policies --set LEGACY
