@@ -1,0 +1,22 @@
+
+declare -A sessions
+#sessions[cls921]="ssh root@192.168.255.241"
+#sessions[cls930]="ssh root@192.168.255.242"
+#sessions[cls940]="ssh root@192.168.255.243"
+#sessions[cls960]="ssh root@192.168.255.245"
+sessions[cls950]="ssh root@192.168.255.241"
+sessions[cls970]="ssh root@192.168.255.220"
+sessions[cls980]="ssh root@192.168.255.208"
+
+# Iterate over the sessions array
+for session in "${!sessions[@]}"
+do
+    # Check if the session is already running
+    if screen -list | grep -q "\.${session}\s"; then
+        echo "Session $session is already running."
+    else
+        # If the session is not running, start it
+        echo "Starting session $session..."
+        screen -S "$session" -d -m ${sessions[$session]}
+    fi
+done
